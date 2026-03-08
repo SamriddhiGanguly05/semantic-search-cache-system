@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h2>ArtSense<span class="highlight"> AI</span></h2>
+            </div>
+            
+            <div class="panel stats-panel">
+                <h3><i class="fa-solid fa-server"></i> System Metrics</h3>
+                
+                <div class="metric">
+                    <span class="metric-label">Cache Entries</span>
+                    <span class="metric-value highlight-cyan" id="stat-entries">0</span>
+                </div>
+                
+                <div class="metric">
+                    <span class="metric-label">Cache Hits</span>
+                    <span class="metric-value highlight-green" id="stat-hits">0</span>
+                </div>
+                
+                <div class="metric">
+                    <span class="metric-label">Cache Misses</span>
+                    <span class="metric-value highlight-red" id="stat-misses">0</span>
+                </div>
+
+                <div class="metric hit-rate-metric">
+                    <span class="metric-label">Efficiency</span>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="hit-rate-bar" style="width: 0%;"></div>
+                    </div>
+                    <span class="metric-value highlight" id="stat-rate">0.0%</span>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary btn-full" id="refresh-stats-btn">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                    <button class="btn btn-outline-danger btn-full" id="clear-cache-btn">
+                        <i class="fa-solid fa-trash-can"></i> Clear Cache
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-workspace">
+            <header class="header">
+                <div>
+                    <h1>Semantic Explorer</h1>
+                    <p class="subtitle">Real-time inference, Faiss indexing, and embedding clustering tester.</p>
+                </div>
+                <div class="status-indicator online">
+                    <span class="pulse"></span> API Connected
+                </div>
+            </header>
+
+            <section class="search-section panel">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="query-input" placeholder="Enter topic or keyword to find nearest documents..." autocomplete="off" autofocus>
+                    <button class="btn btn-gradient" id="search-btn">Analyze</button>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading-state hidden">
+                <div class="spinner"></div>
+                <span>Embedding query & searching vector space...</span>
+            </div>
+
+            <!-- Results Stage -->
+            <section id="results-section" class="results-grid hidden">
+                
+                <!-- Query Info -->
+                <div class="panel result-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-fingerprint"></i> Query Fingerprint</h3>
+                        <span id="cache-badge" class="badge">Miss</span>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label">Original Query</span>
+                            <span class="info-value" id="res-query">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Matched Target</span>
+                            <span class="info-value" id="res-matched">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Cosine Similarity</span>
+                            <div class="score-container">
+                                <span class="info-value score-text" id="res-score">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis/Cluster Info -->
+                <div class="panel result-panel cluster-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-chart-pie"></i> Gaussian Mixture Model</h3>
+                    </div>
+                    <div class="cluster-display">
+                        <div class="cluster-circle">
+                            <span class="cluster-number" id="res-cluster">-</span>
+                            <span class="cluster-text">Cluster</span>
+                        </div>
+                        <p class="cluster-desc">Dominant classification topic based on local embeddings.</p>
+                    </div>
+                </div>
+
+                <!-- Suggested Documents -->
+                <div class="panel result-panel documents-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-file-lines"></i> Nearest Neighbors (Faiss)</h3>
+                    </div>
+                    <div class="indices-wrapper" id="res-indices">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
